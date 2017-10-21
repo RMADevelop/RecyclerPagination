@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.example.romanm.recyclerpagination.Item;
+import com.example.romanm.recyclerpagination.data.Item;
 
 
 @Database(entities = {Item.class},version = 1)

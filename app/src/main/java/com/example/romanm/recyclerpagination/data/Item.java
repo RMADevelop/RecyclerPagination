@@ -1,4 +1,4 @@
-package com.example.romanm.recyclerpagination;
+package com.example.romanm.recyclerpagination.data;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
