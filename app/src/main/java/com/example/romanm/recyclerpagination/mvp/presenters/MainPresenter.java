@@ -78,20 +78,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
 
     public void initItemsDb() {
-//        repository.getAll()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeWith(new DisposableSingleObserver<List<Item>>() {
-//                    @Override
-//                    public void onSuccess(@NonNull List<Item> items) {
-//                        getViewState().setAllItems(items);
-//                    }
-//
-//                    @Override
-//                    public void onError(@NonNull Throwable e) {
-//                        e.printStackTrace();
-//                    }
-//                });
+
 
         Completable.fromRunnable(new Runnable() {
             @Override
@@ -119,44 +106,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
                     }
                 })
-//                .toSingleDefault(true)
-//                .observeOn(Schedulers.io())
-//                .flatMap(new Function<Boolean, SingleSource<List<Item>>>() {
-//                    @Override
-//                    public SingleSource<List<Item>> apply(@NonNull Boolean aBoolean) throws Exception {
-//                        Log.v("HJGJHG", "Item: " );
-//
-//                        return repository.getItems(cursor,LIMIT);
-//                    }
-//                })
-//                .flatMap(new Function<List<Item>, SingleSource<List<Item>>>() {
-//                    @Override
-//                    public SingleSource<List<Item>> apply(@NonNull List<Item> items) throws Exception {
-//                        cursor += LIMIT;
-//                        getViewState().setFirstAdapter(items);
-//                        Log.v("HJGJHG", "Item: " );
-//
-//                        return repository.getItems(cursor, LIMIT);
-//                    }
-//                })
-//                .flatMap(new Function<List<Item>, SingleSource<List<Item>>>() {
-//                    @Override
-//                    public SingleSource<List<Item>> apply(@NonNull List<Item> items) throws Exception {
-//                        cursor += LIMIT;
-//                        getViewState().setFirstAdapter(items);
-//                        Log.v("HJGJHG", "Item: ");
-//
-//                        return repository.getItems(cursor, LIMIT);
-//                    }
-//                })
-//                .doOnEvent(new BiConsumer<List<Item>, Throwable>() {
-//                    @Override
-//                    public void accept(List<Item> items, Throwable throwable) throws Exception {
-//                        cursor += LIMIT;
-//                        currentLoadedList = items;
-//                        getViewState().setFirstAdapter(items);
-//                    }
-//                })
+
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
@@ -180,7 +130,11 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .flatMap(new Function<List<Item>, SingleSource<List<Item>>>() {
                     @Override
                     public SingleSource<List<Item>> apply(@NonNull List<Item> items) throws Exception {
+                        Log.v("HJGJHG", "cursor1  " + cursor);
+
                         cursor += LIMIT;
+                        Log.v("HJGJHG", "cursor11  " + cursor);
+
                         getViewState().setFirstWithoutNotify(items);
                         return repository.getItems(cursor, LIMIT);
                     }
@@ -188,7 +142,11 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .flatMap(new Function<List<Item>, SingleSource<List<Item>>>() {
                     @Override
                     public SingleSource<List<Item>> apply(@NonNull List<Item> items) throws Exception {
+                        Log.v("HJGJHG", "cursor2  " + cursor);
+
                         cursor += LIMIT;
+                        Log.v("HJGJHG", "cursor22  " + cursor);
+
                         getViewState().setFirstWithoutNotify(items);
                         return repository.getItems(cursor, LIMIT);
                     }
@@ -196,7 +154,11 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .doOnEvent(new BiConsumer<List<Item>, Throwable>() {
                     @Override
                     public void accept(List<Item> items, Throwable throwable) throws Exception {
+                        Log.v("HJGJHG", "cursor3  " + cursor);
+
                         cursor += LIMIT;
+                        Log.v("HJGJHG", "cursor33  " + cursor);
+
                         currentLoadedList = items;
                         getViewState().setFirstWithoutNotify(items);
                     }
@@ -205,7 +167,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .subscribe(new DisposableSingleObserver<List<Item>>() {
                     @Override
                     public void onSuccess(@NonNull List<Item> items) {
-                        getViewState().setFirstAdapter(items);
+
                     }
 
                     @Override
@@ -217,14 +179,20 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     public void itemRecycler(int id, int itemCount) {
         this.numberItem = id;
-        if (getNumberItem() > cursor - LIMIT && isLoad) {
+        int cursorCount = cursor;
+        if (getNumberItem() > cursorCount - LIMIT && isLoad) {
             isLoad = false;
+            Log.v("HJGJHG", "load cursor  " + cursor);
+
             loadItemsNext(cursor, LIMIT);
+            Log.v("HJGJHG", "load cursor after  " + cursor);
+
         }
 
     }
 
     public void loadItemsNext(int start, int limit) {
+
         repository.getItems(start, limit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

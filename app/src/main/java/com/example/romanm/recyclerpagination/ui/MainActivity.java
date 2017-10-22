@@ -40,7 +40,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Recy
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//presenter.initItemsDb();
         presenter.setRepository(Injection.provideRepository(getApplicationContext()));
         presenter.checkDb();
         initButton();

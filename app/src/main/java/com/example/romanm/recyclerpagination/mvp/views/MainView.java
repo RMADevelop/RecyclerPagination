@@ -1,6 +1,8 @@
 package com.example.romanm.recyclerpagination.mvp.views;
 
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import com.example.romanm.recyclerpagination.data.Item;
 
 import java.util.List;
