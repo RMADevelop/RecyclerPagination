@@ -46,7 +46,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Recy
         initButton();
         initProgress();
         initRecyclerView();
-        initDataInRecycler();
         recyclerView.setHasFixedSize(true);
     }
 
@@ -64,7 +63,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Recy
         });
     }
 
-    private void initDataInRecycler() {
+    @Override
+    public void initDataInRecycler() {
         presenter.setList();
     }
 
@@ -102,6 +102,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Recy
     @Override
     public void setFirstAdapter(List<Item> list) {
         adapter.setFirstList(list);
+    }
+
+    @Override
+    public void setFirstWithoutNotify(List<Item> list) {
+        adapter.setFirstWithoutNonify(list);
     }
 
     @Override

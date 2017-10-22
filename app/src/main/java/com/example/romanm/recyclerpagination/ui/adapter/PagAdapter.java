@@ -1,6 +1,7 @@
 package com.example.romanm.recyclerpagination.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,11 +68,25 @@ public class PagAdapter extends RecyclerView.Adapter<PagAdapter.PagViewHolder> {
 //        firstList = list;
 
         containToMainList(lastList, middleList, firstList);
+        Log.v("ASDSAD","size " + list.get(1).getId());
         notifyDataSetChanged();
 //        DiffUtillRecycler diffUtillRecycler = new DiffUtillRecycler(oldList, newList);
 //        DiffUtil.DiffResult result = DiffUtil.calculateDiff(diffUtillRecycler,true);
 //        result.dispatchUpdatesTo(this);
 
+    }
+
+    public void setFirstWithoutNonify(List<Item> list) {
+        oldList = newList;
+
+        lastList = middleList;
+        middleList = firstList;
+        firstList = list;
+//        lastList = middleList;
+//        middleList = firstList;
+//        firstList = list;
+
+        containToMainList(lastList, middleList, firstList);
     }
 
     public void setLastList(List<Item> list) {

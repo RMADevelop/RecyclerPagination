@@ -14,7 +14,11 @@ public interface MainView extends MvpView {
 
     void setFirstAdapter(List<Item> list);
 
+    void setFirstWithoutNotify(List<Item> list);
+
     void setAllItems(List<Item> list);
+
+    void initDataInRecycler();
 
     void showRecycler();
 
