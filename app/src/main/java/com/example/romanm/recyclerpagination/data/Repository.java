@@ -14,17 +14,12 @@ public class Repository implements DataSource {
     LocalSource local;
 
 
-    private static Repository INSTANCE;
 
-    private Repository(LocalSource local) {
+    public Repository(LocalSource local) {
         this.local = local;
     }
 
-    public static Repository getInstance(LocalSource local) {
-        if (INSTANCE == null)
-            INSTANCE = new Repository(local);
-        return INSTANCE;
-    }
+
 
     @Override
     public void saveItem(Item item) {

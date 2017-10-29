@@ -9,7 +9,6 @@ import android.widget.ProgressBar;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.example.romanm.recyclerpagination.Injection;
 import com.example.romanm.recyclerpagination.data.Item;
 import com.example.romanm.recyclerpagination.R;
 import com.example.romanm.recyclerpagination.mvp.presenters.MainPresenter;
@@ -40,7 +39,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Recy
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        presenter.setRepository(Injection.provideRepository(getApplicationContext()));
         presenter.checkDb();
         initButton();
         initProgress();

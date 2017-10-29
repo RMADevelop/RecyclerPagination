@@ -38,8 +38,6 @@ public class DiffUtillRecycler extends DiffUtil.Callback {
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        Log.v("ASDSAD","sizeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-
         return oldList.get(oldItemPosition).getId() == newList.get(newItemPosition).getId();
     }
 }

@@ -70,7 +70,6 @@ public class PagAdapter extends RecyclerView.Adapter<PagAdapter.PagViewHolder> {
 
         containToMainList(lastList, middleList, firstList);
         DiffUtillRecycler diffUtillRecycler = new DiffUtillRecycler(oldList, newList);
-        Log.v("ASDSAD", "size " + oldList.size() + " " + newList.size());
 
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(diffUtillRecycler, false);
         result.dispatchUpdatesTo(this);

@@ -4,12 +4,15 @@ import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.example.romanm.recyclerpagination.App;
 import com.example.romanm.recyclerpagination.data.Item;
 import com.example.romanm.recyclerpagination.data.Repository;
 import com.example.romanm.recyclerpagination.mvp.views.MainView;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
@@ -32,6 +35,9 @@ import io.reactivex.subscribers.DefaultSubscriber;
 @InjectViewState
 public class MainPresenter extends MvpPresenter<MainView> {
 
+    @Inject
+    Repository repository;
+
     private static final int LIMIT = 30;
     private int cursor = 0;
 
@@ -41,10 +47,9 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     List<Item> currentLoadedList;
 
-    Repository repository;
 
-    public void setRepository(Repository repository) {
-        this.repository = repository;
+    public MainPresenter() {
+        App.getAppComponent().inject(this);
     }
 
     public void checkDb() {
@@ -87,7 +92,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
             public void run() {
                 for (int i = 0; i < 1000; i++) {
                     repository.saveItem(new Item());
-                    Log.v("HJGJHG", "Item: " + i);
                 }
             }
         })
@@ -147,7 +151,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
                     @Override
                     public void onError(Throwable t) {
-
+                        t.printStackTrace();
                     }
 
                     @Override
