@@ -1,6 +1,7 @@
 package com.example.romanm.recyclerpagination;
 
 import android.support.v7.util.DiffUtil;
+import android.util.Log;
 
 import com.example.romanm.recyclerpagination.data.Item;
 
@@ -37,6 +38,8 @@ public class DiffUtillRecycler extends DiffUtil.Callback {
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+        Log.v("ASDSAD","sizeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+
         return oldList.get(oldItemPosition).getId() == newList.get(newItemPosition).getId();
     }
 }

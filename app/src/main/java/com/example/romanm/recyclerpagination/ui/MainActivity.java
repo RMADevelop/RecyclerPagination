@@ -90,9 +90,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Recy
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-
-
     }
+
+
 
     @Override
     public void showMsg() {
@@ -106,6 +106,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Recy
     @Override
     public void setFirstWithoutNotify(List<Item> list) {
         adapter.setFirstWithoutNonify(list);
+    }
+
+    @Override
+    public void updateAdapter() {
+        adapter.notifyDataSetChanged();
     }
 
     @Override

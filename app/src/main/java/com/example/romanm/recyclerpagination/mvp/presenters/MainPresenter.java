@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
@@ -25,12 +26,13 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DefaultSubscriber;
 
 
 @InjectViewState
 public class MainPresenter extends MvpPresenter<MainView> {
 
-    private static final int LIMIT = 20;
+    private static final int LIMIT = 30;
     private int cursor = 0;
 
     private int numberItem;
@@ -124,57 +126,88 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public void setList() {
-        repository.getItems(cursor, LIMIT)
+
+        Single<List<Item>> list1 = repository.getItems(cursor, LIMIT);
+        cursor += LIMIT;
+        Single<List<Item>> list2 = repository.getItems(cursor, LIMIT);
+        cursor += LIMIT;
+        Single<List<Item>> list3 = repository.getItems(cursor, LIMIT);
+        cursor += LIMIT;
+
+        Flowable<List<Item>> concatList = Single.concat(list1, list2, list3);
+
+        concatList
                 .subscribeOn(Schedulers.io())
-
-                .flatMap(new Function<List<Item>, SingleSource<List<Item>>>() {
-                    @Override
-                    public SingleSource<List<Item>> apply(@NonNull List<Item> items) throws Exception {
-                        Log.v("HJGJHG", "cursor1  " + cursor);
-
-                        cursor += LIMIT;
-                        Log.v("HJGJHG", "cursor11  " + cursor);
-
-                        getViewState().setFirstWithoutNotify(items);
-                        return repository.getItems(cursor, LIMIT);
-                    }
-                })
-                .flatMap(new Function<List<Item>, SingleSource<List<Item>>>() {
-                    @Override
-                    public SingleSource<List<Item>> apply(@NonNull List<Item> items) throws Exception {
-                        Log.v("HJGJHG", "cursor2  " + cursor);
-
-                        cursor += LIMIT;
-                        Log.v("HJGJHG", "cursor22  " + cursor);
-
-                        getViewState().setFirstWithoutNotify(items);
-                        return repository.getItems(cursor, LIMIT);
-                    }
-                })
-                .doOnEvent(new BiConsumer<List<Item>, Throwable>() {
-                    @Override
-                    public void accept(List<Item> items, Throwable throwable) throws Exception {
-                        Log.v("HJGJHG", "cursor3  " + cursor);
-
-                        cursor += LIMIT;
-                        Log.v("HJGJHG", "cursor33  " + cursor);
-
-                        currentLoadedList = items;
-                        getViewState().setFirstWithoutNotify(items);
-                    }
-                })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableSingleObserver<List<Item>>() {
+                .subscribeWith(new DefaultSubscriber<List<Item>>() {
                     @Override
-                    public void onSuccess(@NonNull List<Item> items) {
+                    public void onNext(List<Item> items) {
+                        getViewState().setFirstWithoutNotify(items);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
 
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
-                        e.printStackTrace();
+                    public void onComplete() {
+                        getViewState().updateAdapter();
                     }
                 });
+
+
+//        repository.getItems(cursor, LIMIT)
+//                .subscribeOn(Schedulers.io())
+//
+//                .flatMap(new Function<List<Item>, SingleSource<List<Item>>>() {
+//                    @Override
+//                    public SingleSource<List<Item>> apply(@NonNull List<Item> items) throws Exception {
+//                        Log.v("HJGJHG", "cursor1  " + cursor);
+//
+//                        cursor += LIMIT;
+//                        Log.v("HJGJHG", "cursor11  " + cursor);
+//
+//                        getViewState().setFirstWithoutNotify(items);
+//                        return repository.getItems(cursor, LIMIT);
+//                    }
+//                })
+//                .flatMap(new Function<List<Item>, SingleSource<List<Item>>>() {
+//                    @Override
+//                    public SingleSource<List<Item>> apply(@NonNull List<Item> items) throws Exception {
+//                        Log.v("HJGJHG", "cursor2  " + cursor);
+//
+//                        cursor += LIMIT;
+//                        Log.v("HJGJHG", "cursor22  " + cursor);
+//
+//                        getViewState().setFirstWithoutNotify(items);
+//                        return repository.getItems(cursor, LIMIT);
+//                    }
+//                })
+//                .doOnEvent(new BiConsumer<List<Item>, Throwable>() {
+//                    @Override
+//                    public void accept(List<Item> items, Throwable throwable) throws Exception {
+//                        Log.v("HJGJHG", "cursor3  " + cursor);
+//
+//                        cursor += LIMIT;
+//                        Log.v("HJGJHG", "cursor33  " + cursor);
+//
+//                        currentLoadedList = items;
+//                        getViewState().setFirstWithoutNotify(items);
+//                    }
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new DisposableSingleObserver<List<Item>>() {
+//                    @Override
+//                    public void onSuccess(@NonNull List<Item> items) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(@NonNull Throwable e) {
+//                        e.printStackTrace();
+//                    }
+//                });
     }
 
     public void itemRecycler(int id, int itemCount) {
@@ -182,13 +215,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
         int cursorCount = cursor;
         if (getNumberItem() > cursorCount - LIMIT && isLoad) {
             isLoad = false;
-            Log.v("HJGJHG", "load cursor  " + cursor);
 
             loadItemsNext(cursor, LIMIT);
-            Log.v("HJGJHG", "load cursor after  " + cursor);
 
         }
-
     }
 
     public void loadItemsNext(int start, int limit) {

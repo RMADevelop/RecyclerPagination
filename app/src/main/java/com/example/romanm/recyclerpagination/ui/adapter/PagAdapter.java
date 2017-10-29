@@ -1,5 +1,6 @@
 package com.example.romanm.recyclerpagination.ui.adapter;
 
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.romanm.recyclerpagination.DiffUtillRecycler;
 import com.example.romanm.recyclerpagination.data.Item;
 import com.example.romanm.recyclerpagination.R;
 import com.example.romanm.recyclerpagination.ui.RecyclerListener;
@@ -58,21 +60,20 @@ public class PagAdapter extends RecyclerView.Adapter<PagAdapter.PagViewHolder> {
     }
 
     public void setFirstList(List<Item> list) {
-        oldList = newList;
+        oldList = new ArrayList<>(newList);
 
+        //reverse
         lastList = middleList;
         middleList = firstList;
         firstList = list;
-//        lastList = middleList;
-//        middleList = firstList;
-//        firstList = list;
+
 
         containToMainList(lastList, middleList, firstList);
-        Log.v("ASDSAD","size " + list.get(1).getId());
-        notifyDataSetChanged();
-//        DiffUtillRecycler diffUtillRecycler = new DiffUtillRecycler(oldList, newList);
-//        DiffUtil.DiffResult result = DiffUtil.calculateDiff(diffUtillRecycler,true);
-//        result.dispatchUpdatesTo(this);
+        DiffUtillRecycler diffUtillRecycler = new DiffUtillRecycler(oldList, newList);
+        Log.v("ASDSAD", "size " + oldList.size() + " " + newList.size());
+
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(diffUtillRecycler, false);
+        result.dispatchUpdatesTo(this);
 
     }
 
@@ -103,8 +104,6 @@ public class PagAdapter extends RecyclerView.Adapter<PagAdapter.PagViewHolder> {
 //        newList.addAll(last);
 //        newList.addAll(middle);
         newList.addAll(first);
-
-
     }
 
     public void addAll(List<Item> list) {
